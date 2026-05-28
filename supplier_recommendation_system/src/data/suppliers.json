@@ -1,0 +1,272 @@
+[
+  {
+    "id": "S01",
+    "name": "TechSul SP",
+    "region": "Sudeste",
+    "suppliedCategories": ["electronics", "tools"],
+    "avgDeliveryDays": 2,
+    "priceTier": "high",
+    "reliabilityScore": 0.95
+  },
+  {
+    "id": "S02",
+    "name": "BuildBR MG",
+    "region": "Sudeste",
+    "suppliedCategories": ["construction", "tools"],
+    "avgDeliveryDays": 4,
+    "priceTier": "medium",
+    "reliabilityScore": 0.88
+  },
+  {
+    "id": "S03",
+    "name": "RioFood Dist",
+    "region": "Sudeste",
+    "suppliedCategories": ["food"],
+    "avgDeliveryDays": 3,
+    "priceTier": "medium",
+    "reliabilityScore": 0.80
+  },
+  {
+    "id": "S04",
+    "name": "SulAgro PR",
+    "region": "Sul",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 5,
+    "priceTier": "low",
+    "reliabilityScore": 0.85
+  },
+  {
+    "id": "S05",
+    "name": "SC Tools & Construção",
+    "region": "Sul",
+    "suppliedCategories": ["tools", "construction"],
+    "avgDeliveryDays": 4,
+    "priceTier": "medium",
+    "reliabilityScore": 0.90
+  },
+  {
+    "id": "S06",
+    "name": "RS Agro Supply",
+    "region": "Sul",
+    "suppliedCategories": ["agriculture"],
+    "avgDeliveryDays": 5,
+    "priceTier": "low",
+    "reliabilityScore": 0.82
+  },
+  {
+    "id": "S07",
+    "name": "Amazônia Goods AM",
+    "region": "Norte",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 10,
+    "priceTier": "low",
+    "reliabilityScore": 0.70
+  },
+  {
+    "id": "S08",
+    "name": "Pará Tech PA",
+    "region": "Norte",
+    "suppliedCategories": ["electronics"],
+    "avgDeliveryDays": 12,
+    "priceTier": "medium",
+    "reliabilityScore": 0.72
+  },
+  {
+    "id": "S09",
+    "name": "NordAgro BA",
+    "region": "Nordeste",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 6,
+    "priceTier": "low",
+    "reliabilityScore": 0.78
+  },
+  {
+    "id": "S10",
+    "name": "CE Electronics",
+    "region": "Nordeste",
+    "suppliedCategories": ["electronics", "tools"],
+    "avgDeliveryDays": 7,
+    "priceTier": "medium",
+    "reliabilityScore": 0.82
+  },
+  {
+    "id": "S11",
+    "name": "PE Construtora",
+    "region": "Nordeste",
+    "suppliedCategories": ["construction"],
+    "avgDeliveryDays": 7,
+    "priceTier": "medium",
+    "reliabilityScore": 0.75
+  },
+  {
+    "id": "S12",
+    "name": "Centro Build DF",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["construction", "tools"],
+    "avgDeliveryDays": 5,
+    "priceTier": "medium",
+    "reliabilityScore": 0.86
+  },
+  {
+    "id": "S13",
+    "name": "GO Agro Center",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 6,
+    "priceTier": "low",
+    "reliabilityScore": 0.80
+  },
+  {
+    "id": "S14",
+    "name": "SP Premium Tech",
+    "region": "Sudeste",
+    "suppliedCategories": ["electronics"],
+    "avgDeliveryDays": 2,
+    "priceTier": "high",
+    "reliabilityScore": 0.97
+  },
+  {
+    "id": "S15",
+    "name": "Minero Tools MG",
+    "region": "Sudeste",
+    "suppliedCategories": ["tools", "construction"],
+    "avgDeliveryDays": 3,
+    "priceTier": "medium",
+    "reliabilityScore": 0.91
+  },
+  {
+    "id": "S16",
+    "name": "RJ Distribuidora",
+    "region": "Sudeste",
+    "suppliedCategories": ["food", "agriculture"],
+    "avgDeliveryDays": 4,
+    "priceTier": "medium",
+    "reliabilityScore": 0.83
+  },
+  {
+    "id": "S17",
+    "name": "Catarinense Tech SC",
+    "region": "Sul",
+    "suppliedCategories": ["electronics", "tools"],
+    "avgDeliveryDays": 3,
+    "priceTier": "medium",
+    "reliabilityScore": 0.92
+  },
+  {
+    "id": "S18",
+    "name": "Gaúcha Alimentos RS",
+    "region": "Sul",
+    "suppliedCategories": ["food"],
+    "avgDeliveryDays": 4,
+    "priceTier": "low",
+    "reliabilityScore": 0.87
+  },
+  {
+    "id": "S19",
+    "name": "PR Build & Ferro",
+    "region": "Sul",
+    "suppliedCategories": ["construction", "tools"],
+    "avgDeliveryDays": 5,
+    "priceTier": "medium",
+    "reliabilityScore": 0.84
+  },
+  {
+    "id": "S20",
+    "name": "RO Agro Norte",
+    "region": "Norte",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 11,
+    "priceTier": "low",
+    "reliabilityScore": 0.68
+  },
+  {
+    "id": "S21",
+    "name": "Tocantins Supply",
+    "region": "Norte",
+    "suppliedCategories": ["agriculture", "construction"],
+    "avgDeliveryDays": 9,
+    "priceTier": "low",
+    "reliabilityScore": 0.73
+  },
+  {
+    "id": "S22",
+    "name": "AP Eletrônicos",
+    "region": "Norte",
+    "suppliedCategories": ["electronics"],
+    "avgDeliveryDays": 13,
+    "priceTier": "medium",
+    "reliabilityScore": 0.65
+  },
+  {
+    "id": "S23",
+    "name": "MA Agro Supply",
+    "region": "Nordeste",
+    "suppliedCategories": ["agriculture", "food"],
+    "avgDeliveryDays": 8,
+    "priceTier": "low",
+    "reliabilityScore": 0.74
+  },
+  {
+    "id": "S24",
+    "name": "RN Tech",
+    "region": "Nordeste",
+    "suppliedCategories": ["electronics"],
+    "avgDeliveryDays": 7,
+    "priceTier": "medium",
+    "reliabilityScore": 0.79
+  },
+  {
+    "id": "S25",
+    "name": "PI Construções",
+    "region": "Nordeste",
+    "suppliedCategories": ["construction"],
+    "avgDeliveryDays": 8,
+    "priceTier": "medium",
+    "reliabilityScore": 0.71
+  },
+  {
+    "id": "S26",
+    "name": "AL Ferramentas",
+    "region": "Nordeste",
+    "suppliedCategories": ["tools"],
+    "avgDeliveryDays": 7,
+    "priceTier": "low",
+    "reliabilityScore": 0.76
+  },
+  {
+    "id": "S27",
+    "name": "MS Agro Center",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["agriculture"],
+    "avgDeliveryDays": 7,
+    "priceTier": "low",
+    "reliabilityScore": 0.81
+  },
+  {
+    "id": "S28",
+    "name": "MT Tech Eletrônicos",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["electronics"],
+    "avgDeliveryDays": 6,
+    "priceTier": "medium",
+    "reliabilityScore": 0.85
+  },
+  {
+    "id": "S29",
+    "name": "GO Build Center",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["construction", "tools"],
+    "avgDeliveryDays": 5,
+    "priceTier": "medium",
+    "reliabilityScore": 0.88
+  },
+  {
+    "id": "S30",
+    "name": "DF Food Supply",
+    "region": "Centro-Oeste",
+    "suppliedCategories": ["food"],
+    "avgDeliveryDays": 4,
+    "priceTier": "medium",
+    "reliabilityScore": 0.82
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "name": "modulo_2",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:spam-classifier": "node --no-warnings --watch ./spam_email_classifier/index.js",
+    "start:next-lift-prediction": "node --no-warnings --watch ./next_lift_prediction/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:supplier-recommendation": "nodemon --watch ./supplier_recommendation_system/src --ext js,json --exec \"node --no-warnings ./supplier_recommendation_system/src/main.js\""
+  },
+  "keywords": [],
+  "author": "Lucas Gomide",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "4.22",
+    "express": "^5.2.1",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

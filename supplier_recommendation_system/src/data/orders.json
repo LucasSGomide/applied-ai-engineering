@@ -1,0 +1,842 @@
+[
+  {
+    "id": "O01",
+    "buyerState": "MG",
+    "productName": "martelo",
+    "productCategory": "tools",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O02",
+    "buyerState": "SP",
+    "productName": "notebook",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O03",
+    "buyerState": "RJ",
+    "productName": "pão de forma",
+    "productCategory": "food",
+    "supplierId": "S03"
+  },
+  {
+    "id": "O04",
+    "buyerState": "MG",
+    "productName": "cimento",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O05",
+    "buyerState": "SP",
+    "productName": "chave de fenda",
+    "productCategory": "tools",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O06",
+    "buyerState": "ES",
+    "productName": "parafuso",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O07",
+    "buyerState": "RJ",
+    "productName": "smartphone",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O08",
+    "buyerState": "SP",
+    "productName": "cabo HDMI",
+    "productCategory": "electronics",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O09",
+    "buyerState": "PR",
+    "productName": "soja",
+    "productCategory": "agriculture",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O10",
+    "buyerState": "SC",
+    "productName": "furadeira",
+    "productCategory": "tools",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O11",
+    "buyerState": "RS",
+    "productName": "milho",
+    "productCategory": "agriculture",
+    "supplierId": "S06"
+  },
+  {
+    "id": "O12",
+    "buyerState": "PR",
+    "productName": "alimentos",
+    "productCategory": "food",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O13",
+    "buyerState": "SC",
+    "productName": "tijolo",
+    "productCategory": "construction",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O14",
+    "buyerState": "RS",
+    "productName": "trigo",
+    "productCategory": "agriculture",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O15",
+    "buyerState": "SC",
+    "productName": "ferro",
+    "productCategory": "tools",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O16",
+    "buyerState": "AM",
+    "productName": "mandioca",
+    "productCategory": "agriculture",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O17",
+    "buyerState": "PA",
+    "productName": "roteador",
+    "productCategory": "electronics",
+    "supplierId": "S08"
+  },
+  {
+    "id": "O18",
+    "buyerState": "AM",
+    "productName": "açaí",
+    "productCategory": "food",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O19",
+    "buyerState": "PA",
+    "productName": "sensor IoT",
+    "productCategory": "electronics",
+    "supplierId": "S08"
+  },
+  {
+    "id": "O20",
+    "buyerState": "AM",
+    "productName": "farinha",
+    "productCategory": "food",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O21",
+    "buyerState": "BA",
+    "productName": "feijão",
+    "productCategory": "agriculture",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O22",
+    "buyerState": "CE",
+    "productName": "tablet",
+    "productCategory": "electronics",
+    "supplierId": "S10"
+  },
+  {
+    "id": "O23",
+    "buyerState": "PE",
+    "productName": "areia",
+    "productCategory": "construction",
+    "supplierId": "S11"
+  },
+  {
+    "id": "O24",
+    "buyerState": "BA",
+    "productName": "rapadura",
+    "productCategory": "food",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O25",
+    "buyerState": "CE",
+    "productName": "alicate",
+    "productCategory": "tools",
+    "supplierId": "S10"
+  },
+  {
+    "id": "O26",
+    "buyerState": "PE",
+    "productName": "cal",
+    "productCategory": "construction",
+    "supplierId": "S11"
+  },
+  {
+    "id": "O27",
+    "buyerState": "BA",
+    "productName": "milho",
+    "productCategory": "agriculture",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O28",
+    "buyerState": "DF",
+    "productName": "cano PVC",
+    "productCategory": "construction",
+    "supplierId": "S12"
+  },
+  {
+    "id": "O29",
+    "buyerState": "GO",
+    "productName": "semente",
+    "productCategory": "agriculture",
+    "supplierId": "S13"
+  },
+  {
+    "id": "O30",
+    "buyerState": "MT",
+    "productName": "pesticida",
+    "productCategory": "agriculture",
+    "supplierId": "S13"
+  },
+  {
+    "id": "O31",
+    "buyerState": "DF",
+    "productName": "chave inglesa",
+    "productCategory": "tools",
+    "supplierId": "S12"
+  },
+  {
+    "id": "O32",
+    "buyerState": "MS",
+    "productName": "milho",
+    "productCategory": "agriculture",
+    "supplierId": "S13"
+  },
+  {
+    "id": "O33",
+    "buyerState": "MG",
+    "productName": "notebook",
+    "productCategory": "electronics",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O34",
+    "buyerState": "SP",
+    "productName": "cimento",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O35",
+    "buyerState": "PR",
+    "productName": "semente de soja",
+    "productCategory": "agriculture",
+    "supplierId": "S06"
+  },
+  {
+    "id": "O36",
+    "buyerState": "SP",
+    "productName": "monitor",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O37",
+    "buyerState": "RJ",
+    "productName": "mouse sem fio",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O38",
+    "buyerState": "MG",
+    "productName": "teclado mecânico",
+    "productCategory": "electronics",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O39",
+    "buyerState": "ES",
+    "productName": "impressora",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O40",
+    "buyerState": "SP",
+    "productName": "tablet de trabalho",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O41",
+    "buyerState": "MG",
+    "productName": "câmera de segurança",
+    "productCategory": "electronics",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O42",
+    "buyerState": "RJ",
+    "productName": "adaptador USB-C",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O43",
+    "buyerState": "SP",
+    "productName": "headset",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O44",
+    "buyerState": "ES",
+    "productName": "fone bluetooth",
+    "productCategory": "electronics",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O45",
+    "buyerState": "MG",
+    "productName": "SSD externo",
+    "productCategory": "electronics",
+    "supplierId": "S14"
+  },
+  {
+    "id": "O46",
+    "buyerState": "SP",
+    "productName": "alicate de pressão",
+    "productCategory": "tools",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O47",
+    "buyerState": "MG",
+    "productName": "nível de bolha",
+    "productCategory": "tools",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O48",
+    "buyerState": "RJ",
+    "productName": "trena laser",
+    "productCategory": "tools",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O49",
+    "buyerState": "ES",
+    "productName": "chave torque",
+    "productCategory": "tools",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O50",
+    "buyerState": "SP",
+    "productName": "parafusadeira elétrica",
+    "productCategory": "tools",
+    "supplierId": "S01"
+  },
+  {
+    "id": "O51",
+    "buyerState": "MG",
+    "productName": "esmerilhadeira",
+    "productCategory": "tools",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O52",
+    "buyerState": "SP",
+    "productName": "vergalhão",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O53",
+    "buyerState": "MG",
+    "productName": "argamassa",
+    "productCategory": "construction",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O54",
+    "buyerState": "RJ",
+    "productName": "telha cerâmica",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O55",
+    "buyerState": "ES",
+    "productName": "tinta látex",
+    "productCategory": "construction",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O56",
+    "buyerState": "SP",
+    "productName": "drywall",
+    "productCategory": "construction",
+    "supplierId": "S02"
+  },
+  {
+    "id": "O57",
+    "buyerState": "MG",
+    "productName": "impermeabilizante",
+    "productCategory": "construction",
+    "supplierId": "S15"
+  },
+  {
+    "id": "O58",
+    "buyerState": "SP",
+    "productName": "arroz parboilizado",
+    "productCategory": "food",
+    "supplierId": "S03"
+  },
+  {
+    "id": "O59",
+    "buyerState": "MG",
+    "productName": "leite UHT",
+    "productCategory": "food",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O60",
+    "buyerState": "RJ",
+    "productName": "óleo de soja",
+    "productCategory": "food",
+    "supplierId": "S03"
+  },
+  {
+    "id": "O61",
+    "buyerState": "ES",
+    "productName": "macarrão",
+    "productCategory": "food",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O62",
+    "buyerState": "SP",
+    "productName": "fertilizante NPK",
+    "productCategory": "agriculture",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O63",
+    "buyerState": "MG",
+    "productName": "defensivo agrícola",
+    "productCategory": "agriculture",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O64",
+    "buyerState": "RJ",
+    "productName": "adubo orgânico",
+    "productCategory": "agriculture",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O65",
+    "buyerState": "ES",
+    "productName": "calcário agrícola",
+    "productCategory": "agriculture",
+    "supplierId": "S16"
+  },
+  {
+    "id": "O66",
+    "buyerState": "PR",
+    "productName": "aveia",
+    "productCategory": "agriculture",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O67",
+    "buyerState": "RS",
+    "productName": "cevada",
+    "productCategory": "agriculture",
+    "supplierId": "S06"
+  },
+  {
+    "id": "O68",
+    "buyerState": "SC",
+    "productName": "girassol",
+    "productCategory": "agriculture",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O69",
+    "buyerState": "RS",
+    "productName": "sorgo",
+    "productCategory": "agriculture",
+    "supplierId": "S06"
+  },
+  {
+    "id": "O70",
+    "buyerState": "PR",
+    "productName": "canola",
+    "productCategory": "agriculture",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O71",
+    "buyerState": "RS",
+    "productName": "linho",
+    "productCategory": "agriculture",
+    "supplierId": "S06"
+  },
+  {
+    "id": "O72",
+    "buyerState": "PR",
+    "productName": "linguiça artesanal",
+    "productCategory": "food",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O73",
+    "buyerState": "RS",
+    "productName": "queijo gaúcho",
+    "productCategory": "food",
+    "supplierId": "S18"
+  },
+  {
+    "id": "O74",
+    "buyerState": "SC",
+    "productName": "doce de leite",
+    "productCategory": "food",
+    "supplierId": "S18"
+  },
+  {
+    "id": "O75",
+    "buyerState": "PR",
+    "productName": "vinagre de maçã",
+    "productCategory": "food",
+    "supplierId": "S04"
+  },
+  {
+    "id": "O76",
+    "buyerState": "SC",
+    "productName": "parafusadeira de impacto",
+    "productCategory": "tools",
+    "supplierId": "S17"
+  },
+  {
+    "id": "O77",
+    "buyerState": "RS",
+    "productName": "torquímetro digital",
+    "productCategory": "tools",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O78",
+    "buyerState": "PR",
+    "productName": "martelo pneumático",
+    "productCategory": "tools",
+    "supplierId": "S19"
+  },
+  {
+    "id": "O79",
+    "buyerState": "SC",
+    "productName": "morsa de bancada",
+    "productCategory": "tools",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O80",
+    "buyerState": "RS",
+    "productName": "rebarbadora angular",
+    "productCategory": "tools",
+    "supplierId": "S17"
+  },
+  {
+    "id": "O81",
+    "buyerState": "SC",
+    "productName": "madeira compensada",
+    "productCategory": "construction",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O82",
+    "buyerState": "PR",
+    "productName": "bloco cerâmico",
+    "productCategory": "construction",
+    "supplierId": "S19"
+  },
+  {
+    "id": "O83",
+    "buyerState": "RS",
+    "productName": "manta asfáltica",
+    "productCategory": "construction",
+    "supplierId": "S05"
+  },
+  {
+    "id": "O84",
+    "buyerState": "SC",
+    "productName": "roteador Wi-Fi",
+    "productCategory": "electronics",
+    "supplierId": "S17"
+  },
+  {
+    "id": "O85",
+    "buyerState": "RS",
+    "productName": "smart TV",
+    "productCategory": "electronics",
+    "supplierId": "S17"
+  },
+  {
+    "id": "O86",
+    "buyerState": "RO",
+    "productName": "borracha natural",
+    "productCategory": "agriculture",
+    "supplierId": "S20"
+  },
+  {
+    "id": "O87",
+    "buyerState": "TO",
+    "productName": "arroz agulhinha",
+    "productCategory": "agriculture",
+    "supplierId": "S21"
+  },
+  {
+    "id": "O88",
+    "buyerState": "AC",
+    "productName": "castanha-do-pará",
+    "productCategory": "agriculture",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O89",
+    "buyerState": "RR",
+    "productName": "cupuaçu",
+    "productCategory": "agriculture",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O90",
+    "buyerState": "AM",
+    "productName": "tucumã",
+    "productCategory": "food",
+    "supplierId": "S07"
+  },
+  {
+    "id": "O91",
+    "buyerState": "RO",
+    "productName": "guaraná em pó",
+    "productCategory": "food",
+    "supplierId": "S20"
+  },
+  {
+    "id": "O92",
+    "buyerState": "PA",
+    "productName": "GPS agrícola",
+    "productCategory": "electronics",
+    "supplierId": "S08"
+  },
+  {
+    "id": "O93",
+    "buyerState": "AP",
+    "productName": "módulo solar",
+    "productCategory": "electronics",
+    "supplierId": "S22"
+  },
+  {
+    "id": "O94",
+    "buyerState": "TO",
+    "productName": "madeira de lei",
+    "productCategory": "construction",
+    "supplierId": "S21"
+  },
+  {
+    "id": "O95",
+    "buyerState": "AC",
+    "productName": "telha de zinco",
+    "productCategory": "construction",
+    "supplierId": "S21"
+  },
+  {
+    "id": "O96",
+    "buyerState": "BA",
+    "productName": "cacau em pó",
+    "productCategory": "agriculture",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O97",
+    "buyerState": "MA",
+    "productName": "babaçu",
+    "productCategory": "agriculture",
+    "supplierId": "S23"
+  },
+  {
+    "id": "O98",
+    "buyerState": "BA",
+    "productName": "caju",
+    "productCategory": "agriculture",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O99",
+    "buyerState": "MA",
+    "productName": "algodão em pluma",
+    "productCategory": "agriculture",
+    "supplierId": "S23"
+  },
+  {
+    "id": "O100",
+    "buyerState": "BA",
+    "productName": "dendê",
+    "productCategory": "food",
+    "supplierId": "S09"
+  },
+  {
+    "id": "O101",
+    "buyerState": "MA",
+    "productName": "carne de sol",
+    "productCategory": "food",
+    "supplierId": "S23"
+  },
+  {
+    "id": "O102",
+    "buyerState": "CE",
+    "productName": "nobreak",
+    "productCategory": "electronics",
+    "supplierId": "S10"
+  },
+  {
+    "id": "O103",
+    "buyerState": "RN",
+    "productName": "inversor solar",
+    "productCategory": "electronics",
+    "supplierId": "S24"
+  },
+  {
+    "id": "O104",
+    "buyerState": "PE",
+    "productName": "câmera CCTV",
+    "productCategory": "electronics",
+    "supplierId": "S10"
+  },
+  {
+    "id": "O105",
+    "buyerState": "CE",
+    "productName": "alicate universal",
+    "productCategory": "tools",
+    "supplierId": "S10"
+  },
+  {
+    "id": "O106",
+    "buyerState": "AL",
+    "productName": "martelo demolidor",
+    "productCategory": "tools",
+    "supplierId": "S26"
+  },
+  {
+    "id": "O107",
+    "buyerState": "PE",
+    "productName": "gesso em pó",
+    "productCategory": "construction",
+    "supplierId": "S11"
+  },
+  {
+    "id": "O108",
+    "buyerState": "PI",
+    "productName": "tijolos de barro",
+    "productCategory": "construction",
+    "supplierId": "S25"
+  },
+  {
+    "id": "O109",
+    "buyerState": "GO",
+    "productName": "soja transgênica",
+    "productCategory": "agriculture",
+    "supplierId": "S13"
+  },
+  {
+    "id": "O110",
+    "buyerState": "MS",
+    "productName": "milho doce",
+    "productCategory": "agriculture",
+    "supplierId": "S27"
+  },
+  {
+    "id": "O111",
+    "buyerState": "MT",
+    "productName": "semente de algodão",
+    "productCategory": "agriculture",
+    "supplierId": "S13"
+  },
+  {
+    "id": "O112",
+    "buyerState": "MT",
+    "productName": "equipamento de monitoramento",
+    "productCategory": "electronics",
+    "supplierId": "S28"
+  },
+  {
+    "id": "O113",
+    "buyerState": "MS",
+    "productName": "tablet rural",
+    "productCategory": "electronics",
+    "supplierId": "S28"
+  },
+  {
+    "id": "O114",
+    "buyerState": "DF",
+    "productName": "furadeira de impacto",
+    "productCategory": "tools",
+    "supplierId": "S12"
+  },
+  {
+    "id": "O115",
+    "buyerState": "GO",
+    "productName": "esmerilhadeira angular",
+    "productCategory": "tools",
+    "supplierId": "S29"
+  },
+  {
+    "id": "O116",
+    "buyerState": "MT",
+    "productName": "chave combinada",
+    "productCategory": "tools",
+    "supplierId": "S12"
+  },
+  {
+    "id": "O117",
+    "buyerState": "DF",
+    "productName": "tijolos refratários",
+    "productCategory": "construction",
+    "supplierId": "S12"
+  },
+  {
+    "id": "O118",
+    "buyerState": "GO",
+    "productName": "cimento branco",
+    "productCategory": "construction",
+    "supplierId": "S29"
+  },
+  {
+    "id": "O119",
+    "buyerState": "DF",
+    "productName": "embutidos",
+    "productCategory": "food",
+    "supplierId": "S30"
+  },
+  {
+    "id": "O120",
+    "buyerState": "GO",
+    "productName": "laticínios",
+    "productCategory": "food",
+    "supplierId": "S30"
+  }
+]

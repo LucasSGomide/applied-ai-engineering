@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier Finder</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg:          #09090f;
+    --surface:     #13111c;
+    --surface-2:   #1e1a2e;
+    --border:      #2e2a45;
+    --purple:      #7c3aed;
+    --purple-light:#a78bfa;
+    --purple-dim:  #3b1f6e;
+    --text:        #ffffff;
+    --text-muted:  #9ca3af;
+    --danger:      #ef4444;
+    --success:     #22c55e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--purple-light);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── App body: main + sidebar ──────────────────────────────── */
+
+  .app-body {
+    display: flex;
+    flex: 1;
+  }
+
+  main {
+    flex: 1;
+    min-width: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ── Sidebar ───────────────────────────────────────────────── */
+
+  .sidebar {
+    width: 420px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    border-left: 1px solid var(--border);
+    overflow: hidden;
+    transition: width 0.25s ease;
+  }
+
+  .sidebar.collapsed {
+    width: 36px;
+  }
+
+  .sidebar-toggle {
+    width: 36px;
+    flex-shrink: 0;
+    background: var(--surface-2);
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .sidebar-toggle:hover {
+    color: var(--purple-light);
+    background: var(--surface);
+  }
+
+  .sidebar-content {
+    flex: 1;
+    min-width: 0;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
+    transition: opacity 0.15s;
+  }
+
+  .sidebar.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .charts-placeholder {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .charts-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ── Train section ─────────────────────────────────────────── */
+
+  .train-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    padding-top: 0.5rem;
+  }
+
+  .status-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    min-height: 1.3em;
+    text-align: center;
+  }
+
+  /* ── Buttons ───────────────────────────────────────────────── */
+
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.75rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 0 0 4px var(--purple-dim);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--purple);
+    border: 1px solid var(--purple);
+    padding: 0.6rem 1.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+
+  .btn-outline:hover:not(:disabled) {
+    box-shadow: 0 0 0 4px var(--purple-dim);
+  }
+
+  .btn-outline:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* ── Card ──────────────────────────────────────────────────── */
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Order form ────────────────────────────────────────────── */
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  input[type="text"],
+  select {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus,
+  select:focus { border-color: var(--purple); }
+
+  select option { background: var(--surface-2); }
+
+  /* ── Results ───────────────────────────────────────────────── */
+
+  .results-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+  }
+
+  .result-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-rank {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--purple-light);
+    min-width: 1.6rem;
+    text-align: center;
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .result-info { flex: 1; min-width: 0; }
+
+  .result-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .result-id {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.55rem;
+  }
+
+  .result-score {
+    font-size: 0.8rem;
+    color: var(--purple-light);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--purple), var(--purple-light));
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Supplier Finder</h1>
+</header>
+
+<div class="app-body">
+
+  <main>
+
+    <!-- Train button -->
+    <div class="train-section">
+      <button id="trainBtn" class="btn-primary">Train Model</button>
+      <p id="statusText" class="status-text"></p>
+    </div>
+
+    <!-- Order form (hidden until training completes) -->
+    <div id="orderSection" class="card" hidden>
+      <div class="card-title">New Order</div>
+      <form id="orderForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="buyerState">Buyer State</label>
+            <select id="buyerState" name="buyerState">
+              <option>AC</option><option>AL</option><option>AM</option>
+              <option>AP</option><option>BA</option><option>CE</option>
+              <option>DF</option><option>ES</option><option>GO</option>
+              <option>MA</option><option selected>MG</option><option>MS</option>
+              <option>MT</option><option>PA</option><option>PB</option>
+              <option>PE</option><option>PI</option><option>PR</option>
+              <option>RJ</option><option>RN</option><option>RO</option>
+              <option>RR</option><option>RS</option><option>SC</option>
+              <option>SE</option><option>SP</option><option>TO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="productCategory">Product Category</label>
+            <select id="productCategory" name="productCategory">
+              <option value="construction">construction</option>
+              <option value="tools">tools</option>
+              <option value="agriculture">agriculture</option>
+              <option value="electronics">electronics</option>
+              <option value="food">food</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" name="productName" placeholder="e.g. martelo">
+          </div>
+        </div>
+        <button type="submit" id="submitBtn" class="btn-outline">Get Recommendations</button>
+      </form>
+    </div>
+
+    <!-- Results -->
+    <div id="resultsSection" hidden>
+      <div class="results-title">Top 5 Suppliers</div>
+      <div id="resultsList"></div>
+    </div>
+
+  </main>
+
+  <!-- Charts sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle charts panel">◀</button>
+    <div class="sidebar-content">
+      <div id="chartsPlaceholder" class="charts-placeholder">
+        Train the model to see live charts
+      </div>
+      <div id="chartsSection" class="charts-column" hidden>
+        <div class="card">
+          <div class="card-title">Accuracy</div>
+          <canvas id="accuracyChart"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">Loss</div>
+          <canvas id="lossChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /.app-body -->
+
+<script>
+  const trainBtn       = document.getElementById('trainBtn');
+  const statusText     = document.getElementById('statusText');
+  const chartsSection  = document.getElementById('chartsSection');
+  const orderSection   = document.getElementById('orderSection');
+  const orderForm      = document.getElementById('orderForm');
+  const submitBtn      = document.getElementById('submitBtn');
+  const resultsSection = document.getElementById('resultsSection');
+  const resultsList    = document.getElementById('resultsList');
+  const sidebarEl      = document.getElementById('sidebar');
+  const sidebarToggle  = document.getElementById('sidebarToggle');
+
+  let accuracyChart = null;
+  let lossChart = null;
+
+  // ── Sidebar toggle ────────────────────────────────────────────
+
+  sidebarToggle.addEventListener('click', () => {
+    const isCollapsed = sidebarEl.classList.toggle('collapsed');
+    sidebarToggle.textContent = isCollapsed ? '▶' : '◀';
+    if (!isCollapsed && accuracyChart) {
+      accuracyChart.resize();
+      lossChart.resize();
+    }
+  });
+
+  // ── Charts ────────────────────────────────────────────────────
+
+  function makeChartConfig(label, color, yMin, yMax) {
+    const yScale = {
+      grid: { color: '#2e2a45' },
+      ticks: { color: '#9ca3af' },
+    };
+    if (yMin !== undefined) yScale.min = yMin;
+    if (yMax !== undefined) yScale.max = yMax;
+
+    return {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label,
+          data: [],
+          borderColor: color,
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 0,
+        }],
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        scales: {
+          x: {
+            grid: { color: '#2e2a45' },
+            ticks: { color: '#9ca3af', maxTicksLimit: 10 },
+          },
+          y: yScale,
+        },
+        plugins: {
+          legend: { labels: { color: '#ffffff', boxWidth: 12 } },
+        },
+      },
+    };
+  }
+
+  function initCharts() {
+    document.getElementById('chartsPlaceholder').hidden = true;
+    chartsSection.hidden = false;
+    if (sidebarEl.classList.contains('collapsed')) {
+      sidebarEl.classList.remove('collapsed');
+      sidebarToggle.textContent = '◀';
+    }
+    accuracyChart = new Chart(
+      document.getElementById('accuracyChart'),
+      makeChartConfig('Accuracy', '#a78bfa', 0, 1),
+    );
+    lossChart = new Chart(
+      document.getElementById('lossChart'),
+      makeChartConfig('Loss', '#ef4444'),
+    );
+  }
+
+  function resetCharts() {
+    for (const chart of [accuracyChart, lossChart]) {
+      chart.data.labels = [];
+      chart.data.datasets[0].data = [];
+      chart.update('none');
+    }
+  }
+
+  function pushEpoch(epoch, accuracy, loss) {
+    const label = epoch + 1;
+    accuracyChart.data.labels.push(label);
+    accuracyChart.data.datasets[0].data.push(accuracy);
+    accuracyChart.update('none');
+
+    lossChart.data.labels.push(label);
+    lossChart.data.datasets[0].data.push(loss);
+    lossChart.update('none');
+  }
+
+  // ── Training ──────────────────────────────────────────────────
+
+  trainBtn.addEventListener('click', () => {
+    trainBtn.disabled = true;
+    trainBtn.textContent = 'Training…';
+    orderSection.hidden = true;
+    resultsSection.hidden = true;
+    statusText.textContent = '';
+
+    if (!accuracyChart) {
+      initCharts();
+    } else {
+      resetCharts();
+    }
+
+    const sse = new EventSource('/api/train');
+
+    sse.addEventListener('epoch', (e) => {
+      const { epoch, loss, accuracy } = JSON.parse(e.data);
+      statusText.textContent =
+        `Epoch ${epoch + 1} / 150 — loss: ${loss.toFixed(4)}  acc: ${(accuracy * 100).toFixed(1)}%`;
+      pushEpoch(epoch, accuracy, loss);
+    });
+
+    sse.addEventListener('trained', (e) => {
+      sse.close();
+      const { accuracy, loss } = JSON.parse(e.data);
+      statusText.textContent =
+        `Training complete — accuracy: ${(accuracy * 100).toFixed(1)}%  loss: ${loss.toFixed(4)}`;
+      trainBtn.disabled = false;
+      trainBtn.textContent = 'Train Model';
+      orderSection.hidden = false;
+    });
+
+    sse.addEventListener('error', (e) => {
+      sse.close();
+      if (e.data) {
+        try {
+          statusText.textContent = `Error: ${JSON.parse(e.data).message}`;
+        } catch (_) {
+          statusText.textContent = 'Training error.';
+        }
+      }
+      trainBtn.disabled = false;
+      trainBtn.textContent = 'Train Model';
+    });
+  });
+
+  // ── Recommend ─────────────────────────────────────────────────
+
+  orderForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    resultsSection.hidden = true;
+
+    const body = {
+      buyerState: orderForm.buyerState.value,
+      productName: orderForm.productName.value.trim(),
+      productCategory: orderForm.productCategory.value,
+    };
+
+    try {
+      const res = await fetch('/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        statusText.textContent = `Error: ${json.error}`;
+        return;
+      }
+      renderResults(json.recommendations);
+    } catch (err) {
+      statusText.textContent = `Error: ${err.message}`;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  function renderResults(recommendations) {
+    resultsSection.hidden = false;
+    resultsList.innerHTML = recommendations.map((r, i) => {
+      const pct = (r.score * 100).toFixed(1);
+      return `
+        <div class="result-card">
+          <div class="result-rank">${i + 1}</div>
+          <div class="result-info">
+            <div class="result-name">${escHtml(r.supplier.name)}</div>
+            <div class="result-id">${escHtml(r.supplier.id)}</div>
+            <div class="result-score">${pct}%</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
