@@ -1,0 +1,166 @@
+/* ── Scrollbars ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+/* ── Settings Drawer ── */
+#settings-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: 320px;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50;
+  overflow-y: auto;
+}
+#settings-drawer.open {
+  transform: translateX(0);
+}
+
+#drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 49;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#drawer-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#drawer-overlay.no-close {
+  cursor: not-allowed;
+}
+
+/* ── Folder Cards ── */
+.folder-card {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.folder-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.folder-card:active {
+  transform: translateY(-1px);
+}
+
+/* ── Note Cards ── */
+.note-card {
+  transition: background-color 0.15s ease;
+}
+.note-card:hover {
+  background-color: #1f2937;
+}
+
+/* ── Chat Bubbles ── */
+.chat-bubble-user {
+  align-self: flex-end;
+  background: #1d4ed8;
+  color: white;
+  border-radius: 18px 18px 4px 18px;
+  max-width: 75%;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.chat-bubble-ai {
+  align-self: flex-start;
+  background: #1f2937;
+  color: #e5e7eb;
+  border-radius: 18px 18px 18px 4px;
+  max-width: 80%;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.chat-bubble-typing {
+  align-self: flex-start;
+  background: #1f2937;
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px;
+}
+
+/* ── Mode Toggle ── */
+.mode-btn {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #9ca3af;
+}
+.mode-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* ── Input Panel ── */
+#input-panel {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 40;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid #1f2937;
+}
+
+/* ── Main content clearance ── */
+main {
+  padding-bottom: 210px;
+}
+
+/* ── Note thumbnail ── */
+.note-thumbnail {
+  width: 72px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+/* ── Mic button active animation ── */
+#btn-mic.recording {
+  animation: pulse-red 1.2s ease-in-out infinite;
+}
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+/* ── Typing dots ── */
+.typing-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #6b7280;
+  animation: bounce-dot 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce-dot {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+  40%            { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── Toast notification ── */
+#toast {
+  position: fixed;
+  bottom: 220px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 60;
+  pointer-events: none;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

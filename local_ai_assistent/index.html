@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Notes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-950 text-white min-h-screen">
+
+  <!-- AI unavailable banner -->
+  <div id="ai-unavailable-banner" hidden class="bg-amber-900/80 border-b border-amber-700 px-4 py-3">
+    <div class="max-w-3xl mx-auto flex items-start gap-3">
+      <span class="text-xl mt-0.5">⚠️</span>
+      <div>
+        <p class="font-semibold text-amber-200" id="banner-title">Local AI unavailable</p>
+        <p class="text-sm text-amber-300 mt-0.5" id="banner-msg">
+          Enable the flag at <code class="bg-amber-950 px-1 rounded">edge://flags/#prompt-api-for-gemini-nano</code>
+          and restart Edge. <a href="test-ai.html" class="underline">Run diagnostics</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center gap-3 sticky top-0 z-30">
+    <button id="btn-hamburger" class="p-2 rounded-lg hover:bg-gray-800 transition-colors" title="Settings">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <h1 class="text-lg font-semibold text-white tracking-tight">Smart Notes</h1>
+    <div class="ml-auto flex items-center gap-2">
+      <span id="ai-status-dot" class="w-2 h-2 rounded-full bg-gray-600" title="AI Status"></span>
+      <span id="ai-status-label" class="text-xs text-gray-500">checking...</span>
+    </div>
+  </header>
+
+  <!-- Settings Drawer -->
+  <aside id="settings-drawer" class="bg-gray-900 border-r border-gray-800 flex flex-col">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+      <h2 class="font-semibold text-gray-100">Settings</h2>
+      <button id="btn-drawer-close" class="p-1.5 rounded-lg hover:bg-gray-800 transition-colors text-gray-400">✕</button>
+    </div>
+
+    <form id="settings-form" class="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+
+      <!-- First access notice -->
+      <div id="first-access-notice" class="hidden bg-blue-950/50 border border-blue-800 rounded-xl p-3 text-sm text-blue-300">
+        Welcome! Configure your preferences to get started.
+      </div>
+
+      <!-- Categories -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-300">Categories</label>
+        <p class="text-xs text-gray-500">One per line or comma-separated</p>
+        <textarea
+          id="input-categories"
+          rows="4"
+          placeholder="Work&#10;Personal&#10;Studies&#10;Projects"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500 resize-none"
+        ></textarea>
+        <p id="categories-error" class="text-xs text-red-400 hidden">Add at least one category.</p>
+      </div>
+
+      <!-- Temperature -->
+      <div class="space-y-2">
+        <div class="flex justify-between">
+          <label class="text-sm font-medium text-gray-300">Temperature</label>
+          <span id="label-temperature" class="text-sm font-mono text-blue-400">0.8</span>
+        </div>
+        <input
+          id="input-temperature"
+          type="range" min="0" max="1" step="0.05" value="0.8"
+          class="w-full accent-blue-500"
+        >
+        <div class="flex justify-between text-xs text-gray-600">
+          <span>Precise (0.0)</span>
+          <span>Creative (1.0)</span>
+        </div>
+      </div>
+
+      <!-- TopK -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-300">Top-K</label>
+        <p class="text-xs text-gray-500">Number of candidate tokens (1–128)</p>
+        <input
+          id="input-topk"
+          type="number" min="1" max="128" value="40"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-blue-500"
+        >
+      </div>
+
+      <!-- GitHub Token (fallback) -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-300">
+          GitHub Token
+          <span class="text-gray-500 font-normal">(AI fallback)</span>
+        </label>
+        <p class="text-xs text-gray-500">
+          Used when local AI is unavailable.
+          Generate at <span class="text-gray-400">github.com → Settings → Developer settings → Tokens</span>
+        </p>
+        <input
+          id="input-github-token"
+          type="password"
+          placeholder="github_pat_..."
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500 font-mono"
+        >
+        <p id="token-status" class="text-xs hidden"></p>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm"
+      >
+        Save Settings
+      </button>
+    </form>
+  </aside>
+
+  <!-- Drawer Overlay -->
+  <div id="drawer-overlay"></div>
+
+  <!-- Breadcrumb -->
+  <nav id="breadcrumb" hidden class="px-4 py-2 flex items-center gap-2 text-sm text-gray-400 border-b border-gray-800 bg-gray-950">
+    <button id="btn-home" class="hover:text-white transition-colors flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+      </svg>
+      Home
+    </button>
+    <span>›</span>
+    <span id="breadcrumb-category" class="text-gray-200 font-medium"></span>
+  </nav>
+
+  <!-- Main views -->
+  <main class="max-w-5xl mx-auto px-4 pt-5">
+
+    <!-- Folder Grid View -->
+    <section id="view-folders">
+      <div id="folders-empty" class="hidden text-center py-20 text-gray-600">
+        <div class="text-5xl mb-3">📁</div>
+        <p class="text-lg">No categories yet.</p>
+        <p class="text-sm mt-1">Open settings (☰) to add categories.</p>
+      </div>
+      <div id="folders-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- Notes List View -->
+    <section id="view-notes" hidden>
+      <div id="notes-empty" class="hidden text-center py-20 text-gray-600">
+        <div class="text-5xl mb-3">📝</div>
+        <p class="text-lg">No notes in this folder.</p>
+        <p class="text-sm mt-1">Use the field below to create your first note.</p>
+      </div>
+      <div id="notes-list" class="space-y-3"></div>
+    </section>
+
+    <!-- Chat View -->
+    <section id="view-chat" hidden class="flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-medium text-gray-400">Chat with AI</h2>
+        <button
+          id="btn-analyze-drive"
+          class="flex items-center gap-2 bg-purple-900/50 hover:bg-purple-800/60 border border-purple-700 text-purple-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+        >
+          <span>🔍</span> Analyze my Drive
+        </button>
+      </div>
+      <div id="chat-history" class="flex flex-col gap-3 min-h-32"></div>
+    </section>
+
+  </main>
+
+  <!-- Input Panel -->
+  <footer id="input-panel" class="bg-gray-900/90 px-4 pt-3 pb-4">
+    <div class="max-w-3xl mx-auto space-y-2">
+
+      <!-- Mode toggle -->
+      <div class="flex items-center gap-1 bg-gray-800 rounded-lg p-1 w-fit">
+        <button id="btn-mode-nova-nota" class="mode-btn active">New Note</button>
+        <button id="btn-mode-chat" class="mode-btn">Chat with AI</button>
+      </div>
+
+      <!-- Image preview -->
+      <div id="image-preview-container" class="hidden flex items-center gap-2 bg-gray-800 rounded-lg p-2">
+        <img id="image-preview" src="" alt="Preview" class="h-14 w-20 object-cover rounded">
+        <div class="flex-1 min-w-0">
+          <p class="text-xs text-gray-400 truncate" id="image-preview-name"></p>
+          <p id="ocr-progress" class="text-xs text-blue-400 hidden">OCR: <span id="ocr-percent">0%</span></p>
+        </div>
+        <button id="btn-remove-image" class="text-gray-500 hover:text-red-400 text-lg p-1">✕</button>
+      </div>
+
+      <!-- Textarea + actions -->
+      <div class="flex gap-2 items-end">
+        <textarea
+          id="main-textarea"
+          rows="2"
+          placeholder="Write your note..."
+          class="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500 resize-none max-h-32"
+        ></textarea>
+
+        <div class="flex flex-col gap-1.5 flex-shrink-0">
+          <button id="btn-mic" class="w-9 h-9 rounded-xl bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center text-gray-400 hover:text-white" title="Record audio">
+            🎤
+          </button>
+          <label id="btn-attach" class="w-9 h-9 rounded-xl bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center text-gray-400 hover:text-white cursor-pointer" title="Attach image">
+            📎
+            <input id="file-input" type="file" accept="image/*" class="hidden">
+          </label>
+        </div>
+
+        <button
+          id="btn-send"
+          class="h-9 px-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl transition-colors flex items-center gap-1.5 flex-shrink-0 disabled:opacity-50"
+        >
+          <span id="btn-send-text">Send</span>
+        </button>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="bg-gray-800 border border-gray-700 text-gray-200 text-sm px-4 py-2 rounded-xl shadow-lg whitespace-nowrap"></div>
+
+  <!-- CDN globals — must load before the ES module -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/dexie@3/dist/dexie.js"></script>
+  <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
