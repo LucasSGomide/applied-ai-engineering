@@ -4,6 +4,17 @@ A privacy-first note-taking app that runs AI entirely in your browser (or falls 
 
 ---
 
+## Learning outcomes
+
+This is a learning project built as part of a postgraduate module. Concepts and techniques applied so far:
+
+1. **Browser-side LLM** — using `window.LanguageModel` (Chrome Prompt API) to run Gemini Nano / Phi Mini entirely on-device, with no network calls.
+2. **GitHub Models integration** — wiring up a lightweight Node.js proxy to forward requests to `models.github.ai` as a transparent cloud fallback when local AI is unavailable.
+3. **Prompt engineering** — writing structured system prompts and task descriptions to guide the model toward consistent outputs (categorization, grammar improvement, summarization).
+4. **Autonomous E2E testing with Playwright MCP** — using the Playwright MCP server to drive a real browser, test IndexedDB state, and implement full Red → Green → Refactor TDD cycles without manual intervention.
+
+---
+
 ## How it works
 
 Smart Notes uses the browser's built-in language model API (`window.LanguageModel` on Chrome/Edge) to automatically categorize, improve, and summarize notes as you write them. If local AI isn't available, it transparently falls back to GitHub Models via a small local proxy server.
@@ -118,6 +129,18 @@ Click **Analyze my Drive** to have the AI read all your notes and give you an ex
 - Use the breadcrumb to go back home
 - The folder grid shows a live note count per category
 
+### Managing notes
+
+Each note card has two action icons:
+
+- **Trash icon (🗑)** — opens a confirmation dialog before permanently deleting the note
+- **Move icon (↗)** — shows a category picker; select a destination to move the note instantly
+
+Click the **body of a note card** to open the note details modal, where you can:
+- Read the original and AI-improved versions of the note side by side
+- Edit either text field inline and save changes back to IndexedDB
+- Delete or move the note directly from the modal
+
 ---
 
 ## Project structure
@@ -151,11 +174,14 @@ local_ai_assistent/
 These features are planned for future releases:
 
 ### Note management
-- [ ] **Delete notes** — trash icon on each note card with a confirmation step to avoid accidents
-- [ ] **Move notes to a different folder** — drag-and-drop between categories or a "Move to…" context menu
-- [ ] **Open note details** — full-screen view with the original text, AI-improved version, summary, image thumbnail, and creation date side by side
-- [ ] **Edit notes** — inline editing of the improved text after a note is saved
+- [x] **Delete notes** — trash icon on each note card with a confirmation step to avoid accidents
+- [x] **Move notes to a different folder** — category picker on each card; note moves instantly on selection
+- [x] **Open note details** — modal with original text, AI-improved version, and creation date; delete and move actions available inline
+- [x] **Edit notes** — inline editing of both original and improved text from the details modal
 - [ ] **Search** — full-text search across all notes with highlighted matches
+
+### Category management
+- [ ] **Add / rename / delete categories** — manage the full list of folders from a dedicated settings panel without having to edit raw text
 
 ### Chat improvements
 - [ ] **Clear chat window** — one-click button to wipe the conversation history and start a fresh session
@@ -166,6 +192,7 @@ These features are planned for future releases:
 - [ ] **Batch re-categorize** — re-run the AI classifier on all notes after adding a new category
 - [ ] **Custom system prompt** — let users tweak the AI personality and note-improvement style from settings
 - [ ] **Offline indicator** — detect when the GitHub fallback is unreachable and show a clear warning
+- [ ] **Neural network classifier** — train a small on-device neural network on the user's own notes to improve category assignment accuracy over time, replacing or augmenting the prompt-based classifier
 
 ### UI & experience
 - [ ] **Dark/light theme toggle** — system-preference aware with a manual override
