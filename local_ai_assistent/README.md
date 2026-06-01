@@ -12,6 +12,7 @@ This is a learning project built as part of a postgraduate module. Concepts and 
 2. **GitHub Models integration** — wiring up a lightweight Node.js proxy to forward requests to `models.github.ai` as a transparent cloud fallback when local AI is unavailable.
 3. **Prompt engineering** — writing structured system prompts and task descriptions to guide the model toward consistent outputs (categorization, grammar improvement, summarization).
 4. **Autonomous E2E testing with Playwright MCP** — using the Playwright MCP server to drive a real browser, test IndexedDB state, and implement full Red → Green → Refactor TDD cycles without manual intervention.
+5. **Category management UX** — implementing right-click context menus with a 500 ms long-press fallback for touch devices, inline text-edit with Enter/blur/Escape semantics, and cascading data updates (rename propagates the new name to all existing notes; delete removes notes alongside the category).
 
 ---
 
@@ -129,6 +130,15 @@ Click **Analyze my Drive** to have the AI read all your notes and give you an ex
 - Use the breadcrumb to go back home
 - The folder grid shows a live note count per category
 
+### Managing categories
+
+Right-click any folder card (or long-press on a touch device) to open a context menu with two options:
+
+- **Rename** — the folder name becomes an editable field. Type a new name and press Enter or click away to confirm. Press Escape to cancel.
+- **Delete** — a confirmation dialog warns that all notes inside the category will also be permanently deleted. Click Confirm to proceed or Cancel to abort.
+
+To create a new category, click the **+ New folder** card at the end of the folder grid. Type a name and click Create (or press Enter).
+
 ### Managing notes
 
 Each note card has two action icons:
@@ -181,7 +191,9 @@ These features are planned for future releases:
 - [ ] **Search** — full-text search across all notes with highlighted matches
 
 ### Category management
-- [ ] **Add / rename / delete categories** — manage the full list of folders from a dedicated settings panel without having to edit raw text
+- [x] **Add categories** — "+" folder card on the home grid opens a name prompt; category is created instantly
+- [x] **Rename categories** — right-click (or long-press on touch) a folder → Rename → inline text edit; Enter or click-away confirms
+- [x] **Delete categories** — right-click a folder → Delete → confirmation modal warns all notes inside are also deleted
 
 ### Chat improvements
 - [ ] **Clear chat window** — one-click button to wipe the conversation history and start a fresh session
