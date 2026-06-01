@@ -3,3 +3,4 @@ node_modules
 .vscode
 .env
 .last-run.json
+ai-util/*
