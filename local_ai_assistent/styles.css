@@ -1,3 +1,6 @@
+/* Tailwind utilities can override the UA stylesheet's [hidden] rule — enforce it */
+[hidden] { display: none !important; }
+
 /* ── Scrollbars ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

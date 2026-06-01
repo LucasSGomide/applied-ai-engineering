@@ -1,5 +1,5 @@
 import {
-  getSettings, saveSettings, createNote,
+  getSettings, saveSettings, createNote, deleteNote, updateNote, getNoteById,
   getNotesByCategory, getAllNotes, getCategorySummaries,
 } from './db.js'
 
@@ -17,6 +17,10 @@ let recognition = null
 let pendingImageBase64 = null
 let isRecording = false
 let speechInsertionStart = 0
+let pendingDeleteId = null
+let movePickerNoteId = null
+let _closePickerHandler = null
+let currentDetailNote = null
 
 // ── Shortcuts ──────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id)
@@ -217,10 +221,14 @@ async function renderNotesList(category) {
 
     card.innerHTML = `
       ${thumb}
-      <div class="flex-1 min-w-0">
+      <div class="note-card-body flex-1 min-w-0 cursor-pointer" data-note-id="${note.id}">
         <p class="text-sm text-gray-300 leading-relaxed line-clamp-3">${escapeHtml(preview)}${preview.length === 150 ? '…' : ''}</p>
         ${note.summary ? `<p class="text-xs text-gray-500 mt-1 italic">${escapeHtml(note.summary)}</p>` : ''}
         <p class="text-xs text-gray-600 mt-2">${date}</p>
+      </div>
+      <div class="flex flex-col gap-1 flex-shrink-0">
+        <button class="btn-move-note p-1.5 rounded-lg hover:bg-blue-900/40 text-gray-600 hover:text-blue-400 transition-colors" data-note-id="${note.id}" data-current-cat="${escapeHtml(note.category)}" title="Move note">↗</button>
+        <button class="btn-delete-note p-1.5 rounded-lg hover:bg-red-900/40 text-gray-600 hover:text-red-400 transition-colors" data-note-id="${note.id}" title="Delete note">🗑</button>
       </div>
     `
     list.appendChild(card)
@@ -529,6 +537,111 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
 }
 
+// ── Move Note ──────────────────────────────────────────────────────────────
+function openMovePicker(noteId, currentCategory, anchorEl) {
+  movePickerNoteId = noteId
+  const picker = $('move-picker')
+  const categories = currentSettings?.categories ?? []
+
+  picker.innerHTML = ''
+  for (const cat of categories) {
+    if (cat === currentCategory) continue
+    const btn = document.createElement('button')
+    btn.className = 'move-picker-option w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors'
+    btn.textContent = cat
+    btn.addEventListener('click', () => moveNote(noteId, cat))
+    picker.appendChild(btn)
+  }
+
+  const rect = anchorEl.getBoundingClientRect()
+  picker.style.top = `${rect.bottom + 4}px`
+  picker.style.left = `${rect.left}px`
+  picker.removeAttribute('hidden')
+
+  if (_closePickerHandler) {
+    document.removeEventListener('click', _closePickerHandler)
+  }
+  _closePickerHandler = (e) => {
+    if (picker.hasAttribute('hidden')) return
+    if (!picker.contains(e.target)) closeMovePicker()
+  }
+  setTimeout(() => document.addEventListener('click', _closePickerHandler), 0)
+}
+
+function closeMovePicker() {
+  const picker = $('move-picker')
+  picker.setAttribute('hidden', '')
+  picker.innerHTML = ''
+  movePickerNoteId = null
+  if (_closePickerHandler) {
+    document.removeEventListener('click', _closePickerHandler)
+    _closePickerHandler = null
+  }
+}
+
+async function moveNote(noteId, targetCategory) {
+  await updateNote(noteId, { category: targetCategory })
+  await renderNotesList(currentCategory)
+  await refreshFolderGrid()
+  closeNoteDetails()
+  showToast(`Note moved to "${targetCategory}"`)
+}
+
+// ── Delete Note ────────────────────────────────────────────────────────────
+function openDeleteModal(noteId) {
+  pendingDeleteId = noteId
+  $('modal-confirm-delete').removeAttribute('hidden')
+}
+
+function closeDeleteModal() {
+  pendingDeleteId = null
+  $('modal-confirm-delete').setAttribute('hidden', '')
+}
+
+async function confirmDelete() {
+  await deleteNote(pendingDeleteId)
+  await renderNotesList(currentCategory)
+  await refreshFolderGrid()
+  closeDeleteModal()
+  showToast('Note deleted')
+}
+
+// ── Note Details ──────────────────────────────────────────────────────────
+function openNoteDetails(note) {
+  currentDetailNote = note
+  const date = new Date(note.created_at).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
+  $('detail-date').textContent = date
+  $('detail-original').value = note.original_text || ''
+  $('detail-improved').value = note.improved_text || ''
+  $('modal-note-details').removeAttribute('hidden')
+}
+
+function closeNoteDetails() {
+  closeMovePicker()
+  $('modal-note-details').setAttribute('hidden', '')
+  currentDetailNote = null
+}
+
+async function saveNoteDetails() {
+  const original_text = $('detail-original').value
+  const improved_text = $('detail-improved').value
+  await updateNote(currentDetailNote.id, { original_text, improved_text })
+  await renderNotesList(currentCategory)
+  showToast('Note saved')
+  closeNoteDetails()
+}
+
+function handleDetailDelete() {
+  const noteId = currentDetailNote.id
+  closeNoteDetails()
+  openDeleteModal(noteId)
+}
+
+function handleDetailMove(event) {
+  const note = currentDetailNote
+  openMovePicker(note.id, note.category, event.currentTarget)
+}
+
 // ── Event bindings ─────────────────────────────────────────────────────────
 function bindEvents() {
   $('btn-hamburger').addEventListener('click', () => openDrawer())
@@ -558,6 +671,33 @@ function bindEvents() {
 
   $('btn-mic').addEventListener('click', handleMicToggle)
   $('btn-analyze-drive').addEventListener('click', handleAnalyzeDrive)
+
+  $('notes-list').addEventListener('click', e => {
+    const moveBtn = e.target.closest('.btn-move-note')
+    if (moveBtn) {
+      e.stopPropagation()
+      openMovePicker(Number(moveBtn.dataset.noteId), moveBtn.dataset.currentCat, moveBtn)
+      return
+    }
+    const deleteBtn = e.target.closest('.btn-delete-note')
+    if (deleteBtn) {
+      e.stopPropagation()
+      openDeleteModal(Number(deleteBtn.dataset.noteId))
+      return
+    }
+    const cardBody = e.target.closest('.note-card-body')
+    if (cardBody) {
+      getNoteById(Number(cardBody.dataset.noteId)).then(note => openNoteDetails(note))
+    }
+  })
+  $('btn-cancel-delete').addEventListener('click', closeDeleteModal)
+  $('btn-confirm-delete').addEventListener('click', confirmDelete)
+
+  $('btn-close-details').addEventListener('click', closeNoteDetails)
+  $('modal-details-backdrop').addEventListener('click', closeNoteDetails)
+  $('detail-btn-save').addEventListener('click', saveNoteDetails)
+  $('detail-btn-delete').addEventListener('click', handleDetailDelete)
+  $('detail-btn-move').addEventListener('click', e => handleDetailMove(e))
 }
 
 // ── Bootstrap ──────────────────────────────────────────────────────────────

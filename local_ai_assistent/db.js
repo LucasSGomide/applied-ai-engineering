@@ -46,8 +46,16 @@ export async function getAllNotes() {
   return db.notes.toArray()
 }
 
+export async function getNoteById(id) {
+  return db.notes.get(id)
+}
+
 export async function deleteNote(id) {
   return db.notes.delete(id)
+}
+
+export async function updateNote(id, fields) {
+  return db.notes.update(id, fields)
 }
 
 export async function getCategorySummaries() {
