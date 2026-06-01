@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test'
-import { seedNote, clearDB, saveSettings } from './helpers.js'
+import { seedNote, seedCategory, clearDB, saveSettings } from './helpers.js'
 
 test.describe('Delete Note', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await clearDB(page)
     await page.waitForSelector('#settings-drawer.open')
-    await saveSettings(page, ['Work'])
+    await saveSettings(page)
+    await seedCategory(page, 'Work')
     await seedNote(page, {
       category: 'Work',
       original_text: 'Test note content',
