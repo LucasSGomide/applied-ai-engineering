@@ -1,0 +1,17 @@
+{
+  "name": "local_ai_assistent",
+  "version": "1.0.0",
+  "description": "A privacy-first note-taking app that runs AI entirely in your browser (or falls back to GitHub Models). No cloud, no subscriptions — your notes stay on your device.",
+  "main": "ai.js",
+  "scripts": {
+    "test": "playwright test",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
