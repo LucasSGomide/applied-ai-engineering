@@ -7,24 +7,60 @@ db.version(1).stores({
   notes: '++id, category, created_at',
 })
 
+db.version(2).stores({
+  settings: '++id',
+  notes: '++id, category, created_at',
+  categories: '++id, name',
+}).upgrade(async tx => {
+  const rows = await tx.table('settings').toArray()
+  if (!rows.length) return
+  const raw = rows[0].categories
+  const names = Array.isArray(raw) ? raw : JSON.parse(raw || '[]')
+  for (const name of names) {
+    await tx.table('categories').add({ name })
+  }
+})
+
 export async function getSettings() {
   const rows = await db.settings.toArray()
   if (!rows.length) return null
   const s = rows[0]
   return {
-    ...s,
-    categories: Array.isArray(s.categories) ? s.categories : JSON.parse(s.categories || '[]'),
+    temperature: s.temperature,
+    topK: s.topK,
+    github_token: s.github_token ?? null,
   }
 }
 
-export async function saveSettings({ temperature, topK, categories, github_token }) {
+export async function saveSettings({ temperature, topK, github_token }) {
   await db.settings.put({
     id: 1,
     temperature,
     topK,
-    categories: JSON.stringify(categories),
     github_token: github_token ?? null,
   })
+}
+
+export async function addCategory(name) {
+  return db.categories.add({ name })
+}
+
+export async function getAllCategories() {
+  const rows = await db.categories.toArray()
+  return rows.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+export async function renameCategory(id, newName) {
+  const cat = await db.categories.get(id)
+  const oldName = cat.name
+  await db.categories.update(id, { name: newName })
+  await db.notes.where('category').equals(oldName).modify({ category: newName })
+}
+
+export async function deleteCategory(id) {
+  const cat = await db.categories.get(id)
+  await db.notes.where('category').equals(cat.name).delete()
+  await db.categories.delete(id)
 }
 
 export async function createNote({ original_text, improved_text, category, image_base64 = null }) {

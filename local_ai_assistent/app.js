@@ -1,6 +1,7 @@
 import {
   getSettings, saveSettings, createNote, deleteNote, updateNote, getNoteById,
   getNotesByCategory, getAllNotes, getCategorySummaries,
+  addCategory, getAllCategories, renameCategory, deleteCategory,
 } from './db.js'
 
 import {
@@ -21,6 +22,11 @@ let pendingDeleteId = null
 let movePickerNoteId = null
 let _closePickerHandler = null
 let currentDetailNote = null
+let ctxTargetCategoryId = null
+let ctxTargetCategoryName = null
+let _longPressTimer = null
+let _renameOriginalName = null
+let pendingDeleteCategoryId = null
 
 // ── Shortcuts ──────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id)
@@ -34,7 +40,7 @@ async function init() {
 
   if (!currentSettings) {
     // First access: pre-fill form with defaults and force settings open
-    populateSettingsForm({ temperature: 0.8, topK: 40, categories: [], github_token: null })
+    populateSettingsForm({ temperature: 0.8, topK: 40, github_token: null })
     openDrawer(true)
     setAIStatus('off')
   } else {
@@ -103,7 +109,6 @@ function closeDrawer() {
 
 // ── Settings ───────────────────────────────────────────────────────────────
 function populateSettingsForm(settings) {
-  $('input-categories').value = (settings.categories ?? []).join('\n')
   $('input-temperature').value = settings.temperature ?? 0.8
   $('label-temperature').textContent = (settings.temperature ?? 0.8).toFixed(2)
   $('input-topk').value = settings.topK ?? 40
@@ -113,21 +118,12 @@ function populateSettingsForm(settings) {
 async function handleSaveSettings(e) {
   e.preventDefault()
 
-  const raw = $('input-categories').value
-  const categories = raw.split(/[\n,]/).map(s => s.trim()).filter(Boolean)
-
-  if (!categories.length) {
-    $('categories-error').classList.remove('hidden')
-    return
-  }
-  $('categories-error').classList.add('hidden')
-
   const temperature   = parseFloat($('input-temperature').value)
   const topK          = parseInt($('input-topk').value, 10)
   const github_token  = $('input-github-token').value.trim() || null
 
-  await saveSettings({ temperature, topK, categories, github_token })
-  currentSettings = { temperature, topK, categories, github_token }
+  await saveSettings({ temperature, topK, github_token })
+  currentSettings = { temperature, topK, github_token }
   configure({ temperature, topK, github_token })
 
   // Re-detect backend with potentially new token
@@ -147,35 +143,180 @@ async function handleSaveSettings(e) {
 
 // ── Folder Grid ────────────────────────────────────────────────────────────
 async function refreshFolderGrid() {
+  const categoryRows = await getAllCategories()
   const summaries = await getCategorySummaries()
-  const categories = currentSettings?.categories ?? []
 
-  // Build a complete list: configured categories + any orphaned categories in notes
-  const allCats = [...new Set([...categories, ...summaries.map(s => s.category)])]
   const countMap = new Map(summaries.map(s => [s.category, s.count]))
+  const realNames = new Set(categoryRows.map(c => c.name))
+  const orphanedNames = summaries.map(s => s.category).filter(n => !realNames.has(n))
 
   const grid = $('folders-grid')
-  const empty = $('folders-empty')
   grid.innerHTML = ''
+  $('folders-empty').classList.add('hidden')
 
-  if (!allCats.length) {
-    empty.classList.remove('hidden')
-    return
+  for (const cat of categoryRows) {
+    const count = countMap.get(cat.name) ?? 0
+    const card = document.createElement('div')
+    card.className = 'folder-card bg-gray-800 hover:bg-gray-750 border border-gray-700 rounded-2xl p-4 flex flex-col items-center gap-2 select-none'
+    card.dataset.categoryId = cat.id
+    card.innerHTML = `
+      <div class="text-4xl">📁</div>
+      <p class="text-sm font-medium text-gray-200 text-center truncate w-full text-center">${escapeHtml(cat.name)}</p>
+      <span class="text-xs text-gray-500">${count} ${count === 1 ? 'note' : 'notes'}</span>
+    `
+    card.addEventListener('click', () => navigateToCategory(cat.name))
+    card.addEventListener('contextmenu', e => {
+      e.preventDefault()
+      openFolderContextMenu(cat.id, cat.name, e.clientX, e.clientY)
+    })
+    card.addEventListener('touchstart', e => {
+      _longPressTimer = setTimeout(() => {
+        const t = e.touches[0]
+        openFolderContextMenu(cat.id, cat.name, t.clientX, t.clientY)
+      }, 500)
+    }, { passive: true })
+    card.addEventListener('touchend', () => clearTimeout(_longPressTimer))
+    card.addEventListener('touchmove', () => clearTimeout(_longPressTimer))
+    grid.appendChild(card)
   }
-  empty.classList.add('hidden')
 
-  for (const cat of allCats) {
-    const count = countMap.get(cat) ?? 0
+  for (const name of orphanedNames) {
+    const count = countMap.get(name) ?? 0
     const card = document.createElement('div')
     card.className = 'folder-card bg-gray-800 hover:bg-gray-750 border border-gray-700 rounded-2xl p-4 flex flex-col items-center gap-2 select-none'
     card.innerHTML = `
       <div class="text-4xl">📁</div>
-      <p class="text-sm font-medium text-gray-200 text-center truncate w-full text-center">${escapeHtml(cat)}</p>
+      <p class="text-sm font-medium text-gray-200 text-center truncate w-full text-center">${escapeHtml(name)}</p>
       <span class="text-xs text-gray-500">${count} ${count === 1 ? 'note' : 'notes'}</span>
     `
-    card.addEventListener('click', () => navigateToCategory(cat))
+    card.addEventListener('click', () => navigateToCategory(name))
     grid.appendChild(card)
   }
+
+  const addCard = document.createElement('div')
+  addCard.className = 'folder-card folder-card-add bg-gray-800 hover:bg-gray-750 border border-dashed border-gray-600 rounded-2xl p-4 flex flex-col items-center gap-2 select-none cursor-pointer'
+  addCard.innerHTML = `<div class="text-4xl">📁<span class="text-2xl font-bold text-gray-400">+</span></div><p class="text-sm text-gray-500">New folder</p>`
+  addCard.addEventListener('click', openAddCategoryModal)
+  grid.appendChild(addCard)
+}
+
+// ── Folder Context Menu ────────────────────────────────────────────────────
+function openFolderContextMenu(catId, catName, x, y) {
+  ctxTargetCategoryId = catId
+  ctxTargetCategoryName = catName
+  const menu = $('folder-context-menu')
+  menu.style.top = y + 'px'
+  menu.style.left = x + 'px'
+  menu.removeAttribute('hidden')
+}
+
+function closeFolderContextMenu() {
+  $('folder-context-menu').setAttribute('hidden', '')
+  ctxTargetCategoryId = null
+  ctxTargetCategoryName = null
+}
+
+// ── Inline Rename ──────────────────────────────────────────────────────────
+function startInlineRename() {
+  const catId = ctxTargetCategoryId
+  const catName = ctxTargetCategoryName
+  closeFolderContextMenu()
+  _renameOriginalName = catName
+
+  const card = document.querySelector(`.folder-card[data-category-id="${catId}"]`)
+  if (!card) return
+  const p = card.querySelector('p.text-sm')
+  const input = document.createElement('input')
+  input.className = 'folder-name-input w-full bg-gray-700 rounded px-1 text-sm text-gray-200 focus:outline-none'
+  input.value = catName
+  p.replaceWith(input)
+  input.focus()
+  input.select()
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmRename(input) }
+    if (e.key === 'Escape') { cancelRename(input) }
+  })
+  input.addEventListener('blur', () => confirmRename(input))
+}
+
+async function confirmRename(input) {
+  if (!input.isConnected) return
+  const newName = input.value.trim()
+  const catId = Number(input.closest('[data-category-id]')?.dataset.categoryId)
+  if (!newName || newName.toLowerCase() === _renameOriginalName.toLowerCase()) {
+    cancelRename(input)
+    return
+  }
+  const cats = await getAllCategories()
+  if (cats.some(c => c.name.toLowerCase() === newName.toLowerCase())) {
+    showToast('A category with that name already exists.')
+    cancelRename(input)
+    return
+  }
+  await renameCategory(catId, newName)
+  await refreshFolderGrid()
+  showToast(`Renamed to "${newName}"`)
+}
+
+function cancelRename(input) {
+  if (!input.isConnected) return
+  const p = document.createElement('p')
+  p.className = 'text-sm font-medium text-gray-200 text-center truncate w-full text-center'
+  p.textContent = _renameOriginalName
+  input.replaceWith(p)
+}
+
+// ── Delete Category Modal ──────────────────────────────────────────────────
+function openDeleteCategoryModal() {
+  pendingDeleteCategoryId = ctxTargetCategoryId
+  closeFolderContextMenu()
+  $('modal-confirm-delete-category').removeAttribute('hidden')
+}
+
+function closeDeleteCategoryModal() {
+  $('modal-confirm-delete-category').setAttribute('hidden', '')
+  pendingDeleteCategoryId = null
+}
+
+async function confirmDeleteCategory() {
+  await deleteCategory(pendingDeleteCategoryId)
+  await refreshFolderGrid()
+  closeDeleteCategoryModal()
+  showToast('Category deleted')
+}
+
+// ── Add Category Modal ─────────────────────────────────────────────────────
+function openAddCategoryModal() {
+  $('input-new-category').value = ''
+  $('new-category-error').classList.add('hidden')
+  $('modal-add-category').removeAttribute('hidden')
+  $('input-new-category').focus()
+}
+
+function closeAddCategoryModal() {
+  $('modal-add-category').setAttribute('hidden', '')
+}
+
+async function handleConfirmAddCategory() {
+  const name = $('input-new-category').value.trim()
+  const errorEl = $('new-category-error')
+
+  if (!name) {
+    errorEl.textContent = 'Category name cannot be empty.'
+    errorEl.classList.remove('hidden')
+    return
+  }
+
+  const existing = await getAllCategories()
+  if (existing.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+    errorEl.textContent = 'A category with this name already exists.'
+    errorEl.classList.remove('hidden')
+    return
+  }
+
+  await addCategory(name)
+  await refreshFolderGrid()
+  closeAddCategoryModal()
 }
 
 // ── Navigation ─────────────────────────────────────────────────────────────
@@ -274,9 +415,9 @@ async function handleSend() {
 
 // ── New Note ───────────────────────────────────────────────────────────────
 async function handleNewNote(text) {
-  if (!currentSettings?.categories?.length) {
-    openDrawer(false)
-    showToast('Configure categories before saving notes.')
+  const cats = await getAllCategories()
+  if (!cats.length) {
+    showToast('No categories yet — use the + folder to add one.')
     return
   }
 
@@ -318,7 +459,7 @@ async function handleNewNote(text) {
 
     const result = await processNote({
       text: combinedText,
-      categories: currentSettings.categories,
+      categories: cats.map(c => c.name),
     })
 
     await createNote({
@@ -538,10 +679,11 @@ function escapeHtml(str) {
 }
 
 // ── Move Note ──────────────────────────────────────────────────────────────
-function openMovePicker(noteId, currentCategory, anchorEl) {
+async function openMovePicker(noteId, currentCategory, anchorEl) {
   movePickerNoteId = noteId
   const picker = $('move-picker')
-  const categories = currentSettings?.categories ?? []
+  const categoryRows = await getAllCategories()
+  const categories = categoryRows.map(c => c.name)
 
   picker.innerHTML = ''
   for (const cat of categories) {
@@ -692,6 +834,22 @@ function bindEvents() {
   })
   $('btn-cancel-delete').addEventListener('click', closeDeleteModal)
   $('btn-confirm-delete').addEventListener('click', confirmDelete)
+
+  $('btn-confirm-add-category').addEventListener('click', handleConfirmAddCategory)
+  $('btn-cancel-add-category').addEventListener('click', closeAddCategoryModal)
+  $('input-new-category').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleConfirmAddCategory()
+    if (e.key === 'Escape') closeAddCategoryModal()
+  })
+
+  $('ctx-rename').addEventListener('click', startInlineRename)
+  $('ctx-delete').addEventListener('click', openDeleteCategoryModal)
+  $('btn-cancel-delete-category').addEventListener('click', closeDeleteCategoryModal)
+  $('btn-confirm-delete-category').addEventListener('click', confirmDeleteCategory)
+  document.addEventListener('click', e => {
+    const menu = $('folder-context-menu')
+    if (!menu.hasAttribute('hidden') && !menu.contains(e.target)) closeFolderContextMenu()
+  })
 
   $('btn-close-details').addEventListener('click', closeNoteDetails)
   $('modal-details-backdrop').addEventListener('click', closeNoteDetails)

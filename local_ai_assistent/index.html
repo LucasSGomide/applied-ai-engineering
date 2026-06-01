@@ -50,19 +50,6 @@
         Welcome! Configure your preferences to get started.
       </div>
 
-      <!-- Categories -->
-      <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-300">Categories</label>
-        <p class="text-xs text-gray-500">One per line or comma-separated</p>
-        <textarea
-          id="input-categories"
-          rows="4"
-          placeholder="Work&#10;Personal&#10;Studies&#10;Projects"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500 resize-none"
-        ></textarea>
-        <p id="categories-error" class="text-xs text-red-400 hidden">Add at least one category.</p>
-      </div>
-
       <!-- Temperature -->
       <div class="space-y-2">
         <div class="flex justify-between">
@@ -142,7 +129,7 @@
       <div id="folders-empty" class="hidden text-center py-20 text-gray-600">
         <div class="text-5xl mb-3">📁</div>
         <p class="text-lg">No categories yet.</p>
-        <p class="text-sm mt-1">Open settings (☰) to add categories.</p>
+        <p class="text-sm mt-1">Click the + folder to create your first category.</p>
       </div>
       <div id="folders-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
     </section>
@@ -264,6 +251,55 @@
           <button id="detail-btn-move" class="p-2 rounded-lg hover:bg-blue-900/40 text-gray-500 hover:text-blue-400 transition-colors" title="Move note">↗</button>
         </div>
         <button id="detail-btn-save" class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Folder Context Menu -->
+  <div id="folder-context-menu" hidden
+       class="fixed z-[70] bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-1 min-w-36">
+    <button id="ctx-rename"
+            class="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors">
+      Rename
+    </button>
+    <button id="ctx-delete"
+            class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors">
+      Delete
+    </button>
+  </div>
+
+  <!-- Confirm Delete Category Modal -->
+  <div id="modal-confirm-delete-category" hidden class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl p-6 w-80 space-y-4 shadow-xl">
+      <h3 class="text-base font-semibold text-gray-100">Delete this category?</h3>
+      <p id="delete-category-msg" class="text-sm text-gray-400">
+        All notes inside will be permanently deleted. This cannot be undone.
+      </p>
+      <div class="flex gap-3 justify-end">
+        <button id="btn-cancel-delete-category"
+                class="px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button id="btn-confirm-delete-category"
+                class="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-500 text-white transition-colors">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div id="modal-add-category" hidden class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl p-6 w-80 space-y-4 shadow-xl">
+      <h3 class="text-base font-semibold text-gray-100">New Category</h3>
+      <input id="input-new-category" type="text" placeholder="Category name"
+        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500">
+      <p id="new-category-error" class="text-xs text-red-400 hidden"></p>
+      <div class="flex gap-3 justify-end">
+        <button id="btn-cancel-add-category" class="px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors">Cancel</button>
+        <button id="btn-confirm-add-category" class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors">Create</button>
       </div>
     </div>
   </div>
