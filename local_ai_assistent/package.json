@@ -1,16 +1,16 @@
 {
-  "name": "local_ai_assistent",
+  "name": "local-ai-assistent",
   "version": "1.0.0",
-  "description": "A privacy-first note-taking app that runs AI entirely in your browser (or falls back to GitHub Models). No cloud, no subscriptions — your notes stay on your device.",
-  "main": "ai.js",
+  "description": "A privacy-first note-taking app that runs AI entirely in your browser (or falls back to GitHub Models).",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "playwright test",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "playwright test"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lucas Gomide",
   "license": "ISC",
-  "type": "module",
   "devDependencies": {
     "@playwright/test": "^1.60.0"
   }

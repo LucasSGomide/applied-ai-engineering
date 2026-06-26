@@ -1,0 +1,16 @@
+{
+  "name": "next-lift-prediction",
+  "version": "0.0.1",
+  "description": "Next lift weight and reps prediction using TensorFlow.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-warnings --watch index.js"
+  },
+  "keywords": [],
+  "author": "Lucas Gomide",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "4.22"
+  }
+}

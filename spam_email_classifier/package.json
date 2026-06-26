@@ -1,0 +1,16 @@
+{
+  "name": "spam-email-classifier",
+  "version": "0.0.1",
+  "description": "Spam email classifier using TensorFlow.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-warnings --watch index.js"
+  },
+  "keywords": [],
+  "author": "Lucas Gomide",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "4.22"
+  }
+}
